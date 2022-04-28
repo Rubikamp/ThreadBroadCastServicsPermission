@@ -18,6 +18,7 @@ public class MyReceiver extends BroadcastReceiver {
             Toast.makeText(context, "no, your connection is interrupted!", Toast.LENGTH_SHORT).show();
         }
 
+        Toast.makeText(context, "WE RECEIVED A SMS.", Toast.LENGTH_LONG).show();
     }
 
     private boolean checkNetwork(Context context){

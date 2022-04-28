@@ -20,4 +20,11 @@
         android:layout_width="300dp"
         tools:src="@drawable/ic_launcher_background"
         android:layout_height="300dp" />
+
+    <Button
+        android:id="@+id/button_permission"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/sms_permission" />
 </LinearLayout>

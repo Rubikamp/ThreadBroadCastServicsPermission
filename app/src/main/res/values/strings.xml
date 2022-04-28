@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">ThreadAndServices</string>
     <string name="download">Download</string>
+    <string name="sms_permission">SMS PERMISSION</string>
 </resources>
