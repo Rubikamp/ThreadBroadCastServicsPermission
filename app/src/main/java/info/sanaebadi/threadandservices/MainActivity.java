@@ -1,11 +1,12 @@
 package info.sanaebadi.threadandservices;
 
 import android.app.ProgressDialog;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     InputStream inputStream = null;
     Bitmap bitmap = null;
 
+    private MyReceiver myReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
         buttonDownload = findViewById(R.id.button_download);
 
         buttonDownload.setOnClickListener(view -> {
-       AsyncTaskExample asyncTaskExample= new AsyncTaskExample();
-       asyncTaskExample.execute("https://www.tutorialspoint.com/images/tp-logo-diamond.png");
+            AsyncTaskExample asyncTaskExample = new AsyncTaskExample();
+            asyncTaskExample.execute("https://www.tutorialspoint.com/images/tp-logo-diamond.png");
 
         });
     }
@@ -54,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Bitmap doInBackground(String... strings) {
             try {
-                url= new URL(strings[0]);
+                url = new URL(strings[0]);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoInput(true);
                 httpURLConnection.connect();
@@ -72,12 +75,27 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-            if(imageResult!=null) {
+            if (imageResult != null) {
                 progressDialog.hide();
                 imageResult.setImageBitmap(bitmap);
-            }else {
+            } else {
                 progressDialog.show();
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            myReceiver = new MyReceiver();
+            registerReceiver(myReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
+            super.onResume();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        unregisterReceiver(myReceiver);
+        super.onPause();
     }
 }
