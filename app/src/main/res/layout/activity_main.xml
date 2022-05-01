@@ -17,9 +17,9 @@
 
     <ImageView
         android:id="@+id/imageview_result"
-        android:layout_width="300dp"
+        android:layout_width="100dp"
         tools:src="@drawable/ic_launcher_background"
-        android:layout_height="300dp" />
+        android:layout_height="100dp" />
 
     <Button
         android:id="@+id/button_permission"
@@ -27,4 +27,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="@string/sms_permission" />
+
+    <Button
+        android:id="@+id/button_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/start_service" />
 </LinearLayout>

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private MyReceiver myReceiver;
     private Button buttonsMSPermission;
     private final int SMS_REQUEST_CODE = 100;
+    private Button buttonStartService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         imageResult = findViewById(R.id.imageview_result);
         buttonDownload = findViewById(R.id.button_download);
         buttonsMSPermission = findViewById(R.id.button_permission);
+        buttonStartService = findViewById(R.id.button_service);
 
         buttonDownload.setOnClickListener(view -> {
             AsyncTaskExample asyncTaskExample = new AsyncTaskExample();
@@ -61,6 +64,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Permission allowed before.", Toast.LENGTH_SHORT).show();
 
             }
+        });
+
+        buttonStartService.setOnClickListener(view -> {
+            Intent serviceIntent=new Intent(MainActivity.this,MyService.class);
+            startService(serviceIntent);
+
         });
     }
 
