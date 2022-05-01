@@ -1,16 +1,25 @@
 package info.sanaebadi.threadandservices;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     Bitmap bitmap = null;
 
     private MyReceiver myReceiver;
+    private Button buttonsMSPermission;
+    private final int SMS_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +45,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         imageResult = findViewById(R.id.imageview_result);
         buttonDownload = findViewById(R.id.button_download);
+        buttonsMSPermission = findViewById(R.id.button_permission);
 
         buttonDownload.setOnClickListener(view -> {
             AsyncTaskExample asyncTaskExample = new AsyncTaskExample();
             asyncTaskExample.execute("https://www.tutorialspoint.com/images/tp-logo-diamond.png");
 
+        });
+
+        buttonsMSPermission.setOnClickListener(view -> {
+            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
+                requestSMSPermission();
+
+            } else {
+                Toast.makeText(MainActivity.this, "Permission allowed before.", Toast.LENGTH_SHORT).show();
+
+            }
         });
     }
 
@@ -81,6 +103,44 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 progressDialog.show();
             }
+        }
+    }
+
+    private void requestSMSPermission() {
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.RECEIVE_SMS)) {
+            new AlertDialog.Builder(this)
+                    .setTitle("sms permission")
+                    .setMessage("for read the phone sms, please confrim.")
+                    .setPositiveButton("Allow", (dialogInterface, i) -> reqPermission())
+                    .setNegativeButton("Deny", (dialogInterface, i) -> dialogInterface.dismiss())
+                    .create()
+                    .show();
+
+        } else {
+            reqPermission();
+
+        }
+
+    }
+
+    private void reqPermission() {
+        ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.RECEIVE_SMS}, SMS_REQUEST_CODE);
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == SMS_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permission allowed.", Toast.LENGTH_SHORT).show();
+
+            } else {
+                Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+
+            }
+
         }
     }
 
